@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <style type="text/css">
+            :root {
+                --screen-w: 380px;
+                --screen-h: 700px;
+            }
+
+            .viewport-settings {
+                display: flex;
+                justify-content: center;
+                margin: 20px 0px;
+            }
+
+            #devices {
+                width: 150px;
+            }
+
+            .preview-container {
+                display: flex;
+                justify-content: center;
+            }
+
+            .viewport-container {
+                height: var(--screen-h);
+                width: var(--screen-w);
+                position: relative;
+                border: 1px solid #d5d5d5;
+                box-shadow: 0 10px 20px -10px rgba(0,0,0,0.1);
+                border-radius: 4px;
+            }
+
+            .viewport-container span {
+                width: 100%;
+                height: 100%;
+                position: absolute;
+                display: block;
+                background-image: var(--path-mock);
+                background-repeat: no-repeat;
+                background-size: var(--screen-w) var(--screen-h);
+            }
+
+            iframe {
+                height: 100%;
+                width: 100%;
+                z-index: -1;
+                box-sizing: border-box;
+            }
+
+            .viewport{
+                width: 30px;
+                margin: 0 5px;
+                text-align: center;
+            }
+
+            #zoom {
+                margin-left: 10px;
+            }
+
+        </style>
+    </head>
+    <body>
+        <div class="viewport-settings">
+            <select id="devices">
+                <option value="-1" data-screen-w="400" data-screen-h="700">Custom Size</option>
+                <option disabled>_________</option>
+                <option data-screen-w="375" data-screen-h="667">iPhone SE</option>
+                <option data-screen-w="414" data-screen-h="896">iPhone 11 Pro Max</option>
+                <option data-screen-w="414" data-screen-h="896">iPhone 11 Xs Max</option>
+                <option data-screen-w="414" data-screen-h="896">iPhone 11</option>
+                <option data-screen-w="414" data-screen-h="896">iPhone 11 Xr</option>
+                <option data-screen-w="375" data-screen-h="812">iPhone 11 Pro</option>
+                <option data-screen-w="375" data-screen-h="812">iPhone 11 X</option>
+                <option data-screen-w="375" data-screen-h="812">iPhone 11 Xs</option>
+                <option data-screen-w="375" data-screen-h="812">iPhone X</option>
+                <option data-screen-w="414" data-screen-h="736">iPhone 8 Plus</option>
+                <option data-screen-w="375" data-screen-h="667">iPhone 8</option>
+                <option data-screen-w="414" data-screen-h="736">iPhone 7 Plus</option>
+                <option data-screen-w="375" data-screen-h="667">iPhone 7</option>
+                <option data-screen-w="414" data-screen-h="736" selected>iPhone 6s Plus</option>
+                <option data-screen-w="375" data-screen-h="667">iPhone 6s</option>
+                <option data-screen-w="414" data-screen-h="736">iPhone 6 Plus</option>
+                <option data-screen-w="375" data-screen-h="667">iPhone 6</option>
+                <option data-screen-w="1024" data-screen-h="1366">iPad Pro</option>
+                <option data-screen-w="768" data-screen-h="1024">iPad Third & Fourth Generation</option>
+                <option data-screen-w="768" data-screen-h="1024">iPad Air 1 & 2</option>
+                <option data-screen-w="768" data-screen-h="1024">iPad Mini</option>
+                <option data-screen-w="768" data-screen-h="1024">iPad Mini 2 & 3</option>
+                <option data-screen-w="411" data-screen-h="731">Nexus 6P</option>
+                <option data-screen-w="411" data-screen-h="731">Nexus 5X</option>
+                <option data-screen-w="411" data-screen-h="731">Google Pixel</option>
+                <option data-screen-w="411" data-screen-h="731">Google Pixel XL</option>
+                <option data-screen-w="411" data-screen-h="731">Google Pixel 2</option>
+                <option data-screen-w="411" data-screen-h="823">Google Pixel 2 XL</option>
+                <option data-screen-w="480" data-screen-h="853">Samsung Galaxy Note 5</option>
+                <option data-screen-w="480" data-screen-h="853">LG G5</option>
+                <option data-screen-w="480" data-screen-h="853">One Plus 3</option>
+                <option data-screen-w="360" data-screen-h="740">Samsung Galaxy S9</option>
+                <option data-screen-w="360" data-screen-h="740">Samsung Galaxy S9+</option>
+                <option data-screen-w="360" data-screen-h="740">Samsung Galaxy S8</option>
+                <option data-screen-w="360" data-screen-h="740">Samsung Galaxy S8+</option>
+                <option data-screen-w="360" data-screen-h="640">Samsung Galaxy S7</option>
+                <option data-screen-w="360" data-screen-h="640">Samsung Galaxy S7 Edge</option>
+                <option data-screen-w="600" data-screen-h="960">Nexus 7 (2013)</option>
+                <option data-screen-w="768" data-screen-h="1024">Nexus 9</option>
+                <option data-screen-w="800" data-screen-h="1280">Samsung Galaxy Tab 10</option>
+                <option data-screen-w="1280" data-screen-h="850">Chromebook Pixel</option>
+            </select>
+            <input class="viewport" id="viewportW" value="414" disabled="disabled"> x
+            <input class="viewport" id="viewportH" value="736" disabled="disabled">
+
+            <select id="zoom">
+                <option value="50">50%</option>
+                <option value="75">75%</option>
+                <option value="100" selected>100%</option>
+                <option value="125">125%</option>
+                <option value="150">150%</option>
+            </select>
+        </div>
+        <div class="preview-container">
+            <div class="viewport-container">
+                <iframe src="test.html" frameborder="0" scrolling="yes"></iframe>
+            </div>
+        </div>
+        <script type="text/javascript">
+
+            var root = document.documentElement,
+                devices = document.getElementById('devices'),
+                viewportW = document.getElementById('viewportW'),
+                viewportH = document.getElementById('viewportH'),
+                zoom = document.getElementById('zoom'),
+                setViewportWidth = function(width) {
+                    root.style.setProperty('--screen-w', width + "px");
+                },
+                setViewportHeight = function(height) {
+                    root.style.setProperty('--screen-h', height + "px");
+                },
+                setViewportSize = function (width, height) {
+                    setViewportWidth(width);
+                    setViewportHeight(height);
+                },
+                setViewportInputVisibility = function(isActive) {
+                    viewportW.disabled = !isActive;
+                    viewportH.disabled = !isActive;
+                }
+
+        	document.addEventListener("DOMContentLoaded", function(event) {
+			    
+            	devices.onchange = function() {
+            	    var elem = (typeof this.selectedIndex === "undefined" ? window.event.srcElement : this),
+            	    	selectedOption = elem.options[elem.selectedIndex],
+            	    	screenW = selectedOption.getAttribute('data-screen-w'),
+            	    	screenH = selectedOption.getAttribute('data-screen-h');
+
+            	    	setViewportSize(screenW, screenH);
+
+                        viewportW.value= screenW;
+                        viewportH.value= screenH;
+
+                        selectedOption.value == -1 ? setViewportInputVisibility(true): setViewportInputVisibility(false);
+            	};
+
+                zoom.onchange = function() {
+                    var elem = (typeof this.selectedIndex === "undefined" ? window.event.srcElement : this),
+                        selectedOption = elem.options[elem.selectedIndex], 
+                        viewport = document.querySelector('.viewport-container');
+
+                    viewport.style.zoom = selectedOption.value + '%';
+                }
+
+                viewportW.onchange = () => {setViewportWidth(viewportW.value);}
+                viewportH.onchange = () => {setViewportHeight(viewportH.value);}
+			});
+
+        </script>
+    </body>
+</html>
